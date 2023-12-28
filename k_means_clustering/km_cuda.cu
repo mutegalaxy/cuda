@@ -8,6 +8,7 @@
  *
  */
 
+#include "km_cuda.h"
 
 #define _POSIX_C_SOURCE 199309L
 #include <time.h>
@@ -17,7 +18,6 @@
 #include <vector>
 #include <iostream>
 #include <cuda.h>
-#include <cuda_runtime.h>
 #include <cfloat>
 #include <iomanip>
 #include <cmath>
@@ -271,16 +271,7 @@ __global__ void compareClusters(float *oldClusters, float *newClusters, int *clu
     }
 }
 
-int main(int argc, char *argv[]) {
-    if (argc != 5) {
-        fprintf(stderr, "Wrong input. Need three inputs");
-        return 1;
-    }
-
-    char *FileName = argv[1];
-    int K = atoi(argv[2]);
-    int numBlocks = atoi(argv[3]);
-    int numThreadsPerBlock = atoi(argv[4]);
+void kMeansClustering(char *FileName, int K, int numBlocks, int numThreadsPerBlock) {
     int N, D;
 
     ifstream file(FileName);
@@ -430,6 +421,20 @@ int main(int argc, char *argv[]) {
     cudaFree(d_minIndices);
     cudaFree(d_newClusters);
     cudaFree(d_clustersChanged);
+}
 
-    return 0;
+int main (int argc, char *argv[]) {
+  if (argc != 5) {
+    fprintf(stderr, "Wrong input. Need three inputs");
+    return 1;
+  }
+
+  char *FileName = argv[1];
+  int K = atoi(argv[2]);
+  int numBlocks = atoi(argv[3]);
+  int numThreadsPerBlock = atoi(argv[4]);
+
+  kMeansClustering(FileName, K, numBlocks, numThreadsPerBlock);
+ 
+  return 0;
 }
