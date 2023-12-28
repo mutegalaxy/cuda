@@ -1,3 +1,14 @@
+/**
+ * @file km_cuda.cu
+ *
+ * @brief Parrallel implementation of k-means clustering using CUDA.
+ *
+ * @author Abas Farah
+ * Contact: contact@mutegalaxy.com
+ *
+ */
+
+
 #define _POSIX_C_SOURCE 199309L
 #include <time.h>
 #include <stdio.h>
