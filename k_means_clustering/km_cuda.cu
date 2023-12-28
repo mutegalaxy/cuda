@@ -423,18 +423,4 @@ void kMeansClustering(char *FileName, int K, int numBlocks, int numThreadsPerBlo
     cudaFree(d_clustersChanged);
 }
 
-int main (int argc, char *argv[]) {
-  if (argc != 5) {
-    fprintf(stderr, "Wrong input. Need three inputs");
-    return 1;
-  }
 
-  char *FileName = argv[1];
-  int K = atoi(argv[2]);
-  int numBlocks = atoi(argv[3]);
-  int numThreadsPerBlock = atoi(argv[4]);
-
-  kMeansClustering(FileName, K, numBlocks, numThreadsPerBlock);
- 
-  return 0;
-}
