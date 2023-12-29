@@ -22,6 +22,13 @@ using namespace std;
  *                   The clusters and centroids will be written to a file.
  *                       - clusters.txt
  *                       - centroids.txt
+ *
+ * @param FileName The name of the file containing the datapoints.
+ * @param K The number of clusters.
+ * @param numBlocks The number of blocks to use.
+ * @param numThreadsPerBlock The number of threads per block to use.
+ *
+ * @return void
 */ 
 void kMeansClustering(char* FileName, int K, int numBlocks, int numThreadsPerBlock);
 
