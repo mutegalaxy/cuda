@@ -64,14 +64,45 @@ void printMatrix(vector<int> matrix, int N, int M) {
   }
 }
 
-// This should generate a unique value for each matrix element
-// It should use curand and every element should be unique
+/**
+* @brief CUDA kernal that fills a N x M matrix with random integers.
+*
+* @param matrix Matrix to be filled with random integers.
+* @param N Number of rows in matrix.
+* @param M Number of columns in matrix.
+*/
+
 __global__ void fillMatrixKernal(int *matrix, int N, int M){
   int i = blockIdx.x;
   int j = threadIdx.x;
   curandState_t state;
   curand_init(clock64(), i, j, &state);
   matrix[i*M+j] = curand(&state) % 100;
+}
+
+
+/**
+* @brief matrix_generator generates a N x M matrix of random integers.
+*
+* @param N Number of rows in matrix.
+* @param M Number of columns in matrix.
+*/
+vector<int> matrix_generator (int N, int M) {
+
+  vector<int> matrix(N*M, 0);
+
+  int *d_matrix;
+  cudaMalloc(&d_matrix, N*M*sizeof(int));
+  cudaMemcpy(d_matrix, matrix.data(), N*M*sizeof(int), cudaMemcpyHostToDevice);
+
+  dim3 blocks(N);
+  dim3 threads(M);
+  fillMatrixKernal<<<blocks, threads>>>(d_matrix, N, M);
+
+  cudaMemcpy(matrix.data(), d_matrix, N*M*sizeof(int), cudaMemcpyDeviceToHost);
+  printMatrix(matrix, N, M);
+
+  return matrix;
 }
 
 int main(int argc, char* argv[]) {
@@ -99,22 +130,7 @@ int main(int argc, char* argv[]) {
 
   double const start_time = monotonic_seconds();
 
-  // Init cpu matrix
-  vector<int> matrix(N*M, 0);
-
-  // Init gpu matrix
-  int *d_matrix;
-  cudaMalloc(&d_matrix, N*M*sizeof(int));
-  cudaMemcpy(d_matrix, matrix.data(), N*M*sizeof(int), cudaMemcpyHostToDevice);
-
-  // Fill gpu matrix with random values
-  dim3 blocks(N);
-  dim3 threads(M);
-  fillMatrixKernal<<<blocks, threads>>>(d_matrix, N, M);
-
-  // Copy gpu matrix to cpu matrix
-  cudaMemcpy(matrix.data(), d_matrix, N*M*sizeof(int), cudaMemcpyDeviceToHost);
-  printMatrix(matrix, N, M);
+  vector<int> matrix = matrix_generator(N, M);
 
   ofstream matrixFile(destFile);
 

@@ -1,4 +1,3 @@
-NVCC = nvcc
 NVCC_FLAGS = --compiler-options -ansi --compiler-options -Wall --compiler-options -std=c++17
 
 all: test_km_cuda

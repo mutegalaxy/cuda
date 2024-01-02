@@ -10,19 +10,14 @@
 #ifndef MATRIX_GENERATOR_H
 #define MATRIX_GENERATOR_H
 
-#include <cuda_runtime.h>
-#include <curand_kernel.h>
+#include <vector>
 
-/* CUDA kernel function
- *
- * fillMatrixKernal: Fills a matrix with random numbers.
- *
- * @param matrix The matrix to fill.
- * @param N The number of rows.
- * @param M The number of columns.
- *
- * @return void
+/**
+* @brief matrix_generator generates a N x M matrix of random integers.
+*
+* @param N Number of rows in matrix.
+* @param M Number of columns in matrix.
 */
-__global__ void fillMatrixKernal(int *matrix, int N, int M);
+std::vector<int> matrix_generator(int N, int M);
 
 #endif // MATRIX_GENERATOR_H
